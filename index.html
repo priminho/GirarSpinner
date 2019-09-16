@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spinner</title>
+    <style>
+     
+    
+    body{
+        width: 1600px;
+        height: 1200px;
+    }
+    h1{
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 20pt;
+        text-shadow: 10px 10px 10px orange; 
+    }
+    </style>
+  
+</head>
+<body>
+   <h1>
+       Desenvolvido por Mateus Evangelista Barroso
+   </h1>
+    <canvas width="800px" height="800px" style="border: 5px solid rgb(26, 16, 18); margin-left:30px; margin-top: 100px; background-color: rgb(222, 236, 20);"></canvas>
+   
+<script>
+
+
+// atributo rotation rotação
+var cnv = document.querySelector('canvas');
+var img = new Image();
+img.src = 'spinner.png';
+img.addEventListener('load',function(){
+    loop();
+},false)
+/// armazenar o contexto da renderização
+
+var ctx = cnv.getContext('2d');
+//Objeto
+var mouse = {
+
+};
+//Evento no canvas
+cnv.addEventListener("mousemove", function(event){
+    mouse.x = event.clientX - cnv.offsetLeft;
+    mouse.y = event.clientY - cnv.offsetTop;
+
+},false);
+var objeto = {
+ x: 100,
+ y:100,
+ width:640,
+ height:640,
+ rotation: 0,
+ img: img,
+ centerX: function(){
+  return this.x + this.width/2;
+},
+centerY:function(){
+    return this.y + this.height/2;
+}
+};
+
+
+// function para chamar a renderização
+    function loop (){
+        requestAnimationFrame(loop,cnv);
+        update();
+        render();
+
+};
+//  função para atualizar a inteiração do usuário com o app
+   function update(){
+   let dx = mouse.x -objeto.centerX();
+  let dy = mouse.y -objeto.centerY();
+ let distance = Math.sqrt(dx*dx + dy*dy);
+ objeto.rotation = Math.atan2(dy,dx);
+ if(distance >= 1){
+     objeto.x += dx *.05;
+     objeto.y += dy *.05;
+ }
+    
+   };
+    // resposavel por desenhar o aviao img
+    function render(){
+        ctx.clearRect(0,0,cnv.width,cnv.height);
+        ctx.save();
+        ctx.translate(objeto.centerX(),objeto.centerY());
+        ctx.rotate(objeto.rotation);
+        ctx.drawImage(
+            // this is objeto o aviao
+          objeto.img,
+          //cordenas e capturas do objeto aviao
+          0,0,objeto.width,objeto.height,
+          // renderização
+         -objeto.width/2,-objeto.height/2,
+         objeto.width,objeto.height)
+         // restaurar o contexto de renderização
+         ctx.restore();
+
+    };
+ 
+
+
+</script>
+
+
+
+</body>
+</html>
